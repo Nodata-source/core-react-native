@@ -1,7 +1,33 @@
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from "react-native";
+import { useState } from "react";
+import { db } from "../../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+
 export default function Dashboard() {
+
+    const [text, setText] = useState("");
+    const [tasks, setTasks] = useState([])
+    const [taskClicked, setTaskClicked] = useState(false);
+
+    const addTask = async () => {
+        if(text.trim() === '') return;
+        setTasks(prev => [...prev, {text, completed: false}])
+        setText("");
+
+     // Add to Firestore
+     try{
+        await addDoc(collection(db, "tasks"), {text, completed: false});
+        console.log("Task added to firestore");
+     }
+     catch(error){
+        console.log("Error adding task to firestore", error);
+     }
+       }
+
+
   return (
+
     <View style={styles.container}>
       <View style={styles.mainContent}>
         <Text>Hi! User</Text>
@@ -31,10 +57,34 @@ export default function Dashboard() {
           <Text>Quick Actions</Text>
           <View style={styles.menus}>
             <View style={styles.quickMenus}>
-              <TouchableOpacity style={styles.newTask}>
+              <TouchableOpacity style={styles.newTask} onPress={()=> setTaskClicked(!taskClicked)}>
                 <Text>New Task</Text>
                 <Ionicons name="add-circle-outline" size={20} color="black" />
               </TouchableOpacity>
+
+              {taskClicked && 
+              <>
+              <Modal visible={taskClicked}
+              transparent={true}
+              animationType="slide">
+                <View style={{backgroundColor: "rgba(0,0,0,0.3)", flex:1, justifyContent: "center", alignItems: "center"}}>
+                <View style={styles.cancelButton}>
+                <TouchableOpacity onPress={()=> setTaskClicked(false)}>
+                    <Ionicons name="close-circle-outline" size={30}/>
+                </TouchableOpacity>
+                </View>
+                <View style={styles.modalStyle}>
+                <View style={{width: '100%', alignItems: "center",justifyContent: "center"}}> 
+                    <TextInput placeholder="Enter New Task" value={text} onChangeText={ setText}
+                        style={{borderWidth:1, padding:5, width: '90%'}}/>
+                    <TouchableOpacity style={styles.addTaskButton} onPress={ addTask}>
+                        <Text>Add Task</Text>
+                    </TouchableOpacity>
+                </View>
+                </View>
+                </View>
+              </Modal>
+              </>}
             </View>
             <View style={styles.quickMenus}>
               <TouchableOpacity style={styles.newTask}>
@@ -138,4 +188,23 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginTop: 5,
   },
+  cancelButton: {
+    position: "absolute",
+    top: 20,
+    right: 20
+  },
+  modalStyle: {
+    padding: 10,
+    height: '30%',
+    width:'90%',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  addTaskButton: {
+    backgroundColor: "#a1f3b7ff",
+    margin: 10,
+    padding: 10,
+    width: "30%"
+  }
 });
