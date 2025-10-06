@@ -22,10 +22,11 @@ export default function Profile() {
   const filterOptions = ["All", "Completed", "Pending"];
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [task, setTask] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
 // later on use querysnapshot for real time updations
-  useEffect(()=>{
-    const fetchTasks = async () => {
+
+const fetchTasks = async () => {
     const querySnapshot = await getDocs(collection(db, 'tasks'));
     const tasks = querySnapshot.docs.map(doc => ({
         id: doc.id,
@@ -35,6 +36,7 @@ export default function Profile() {
     setTask(tasks);
 };
 
+  useEffect(()=>{
   fetchTasks();
   }, []);
 
@@ -71,6 +73,12 @@ export default function Profile() {
     if(selectedFilter === "Completed") return item.completed;
     if(selectedFilter === "Pending") return !item.completed;
   }). filter(item => item.text.toLowerCase(). includes(searchText.toLocaleLowerCase()));
+
+  const onRefresh = async() => {
+    setRefreshing(true);
+    await fetchTasks();
+    setRefreshing(false);
+  }
 
   return (
     <View style={styles.container}>
@@ -124,6 +132,8 @@ export default function Profile() {
               <View style={styles.mainContent}>
                 <View style={styles.taskList}>
                     <SwipeListView data={filteredTasks} keyExtractor={(item)=> item.id}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
                     renderItem={({item}) => (
                         <View style={styles.tableStyle}>
                         <Text style={{fontSize: 15, fontWeight: "bold"}}>{item.text}</Text>
@@ -140,7 +150,7 @@ export default function Profile() {
                             <Ionicons name= "checkmark-done-circle-outline" size={24} color= "green"/>
                         </TouchableOpacity>
                         </View>
-                                                                                                                                                                                    
+
                         {/* Left swipe( rightopenvalue - delete) */}
                             <View style={{flex:1, alignItems: "flex-end", justifyContent: "center"}}>
                         <TouchableOpacity onPress={()=>deleteTask(item.id)}>
