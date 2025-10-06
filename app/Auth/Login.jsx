@@ -1,9 +1,33 @@
-import { Text, View, StyleSheet,TextInput, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet,TextInput, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { auth } from "../../firebaseConfig";
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useState } from "react";
 
 export default function Login() {
     const router = useRouter();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLogin = async () => {
+            if(email.trim() === "" || password.trim() === ""){
+                Alert.alert("Enter All details")
+                return;
+            }
+            try{
+                const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+                console.log("user LoggedIn successfully");
+                Alert.alert("SignIn Successful!");
+    
+                router.push('/HomePage');
+            }
+            catch(error) {
+                console.error("Firebase Sign In Error:", error.message);
+                Alert.alert('Sign In Failed', error.message); 
+            }
+        }
+        
   return (
     <SafeAreaView style={{flex:1}}>
     <View style={styles.container}>
@@ -11,11 +35,11 @@ export default function Login() {
             <Text>Hello</Text>
             <View style={styles.signupCard}>
                 <Text style={styles.label}>Email Address</Text>
-                <TextInput placeholder="Enter your Email" style={styles.styleTextInput}/>
+                <TextInput placeholder="Enter your Email" value={email} onChangeText={setEmail} style={styles.styleTextInput}/>
                 <Text style={styles.label}>Password</Text>
-                <TextInput placeholder="Enter your Password" style={styles.styleTextInput}/>
+                <TextInput placeholder="Enter your Password" value={password} onChangeText={setPassword} style={styles.styleTextInput}/>
             </View>
-            <TouchableOpacity style={styles.signupButton} onPress={()=>router.push('/HomePage')}>
+            <TouchableOpacity style={styles.signupButton} onPress={handleLogin}>
                 <Text style={{color: "white", fontWeight: "bold", fontSize: 15}}>Login</Text>
             </TouchableOpacity>
         </View>
