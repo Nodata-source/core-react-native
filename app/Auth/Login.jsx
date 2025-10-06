@@ -42,6 +42,15 @@ export default function Login() {
             <TouchableOpacity style={styles.signupButton} onPress={handleLogin}>
                 <Text style={{color: "white", fontWeight: "bold", fontSize: 15}}>Login</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+            style={{ marginTop: 15 }}
+            onPress={() => router.push("/Auth/passwordReset")}
+          >
+            <Text style={{ color: "#2b53f0ff" }}>
+              Forgot Password?
+            </Text>
+          </TouchableOpacity>
         </View>
     </View>
     </SafeAreaView>
