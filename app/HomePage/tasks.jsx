@@ -128,23 +128,23 @@ export default function Profile() {
                         <View style={styles.tableStyle}>
                         <Text style={{fontSize: 15, fontWeight: "bold"}}>{item.text}</Text>
                         <TouchableOpacity>
-                            <Ionicons name="checkmark-done-circle-outline" size={24} color="green"/>
+                            <Ionicons name= {item.completed ? "checkmark-done-circle-outline" : "alert-circle-outline"} size={24} color={item.completed ? "green" : "red"}/>
                         </TouchableOpacity>
                          </View>
                     )}
                     renderHiddenItem={({ item }, rowMap) => (
-                        <View style={{flex:1, flexDirection: "row", justifyContent: "space-between", marginVertical: 10}}>
+                        <View style={{flex:1, flexDirection: "row", justifyContent: "space-between", marginVertical: 10,backgroundColor: "#FFFFFF80", borderRadius: 8, padding:10}}>
                             {/* Right swipe( leftopenvalue - mark completed) */}
                             <View style={{flex:1, alignItems: "flex-start", justifyContent: "center"}}>
                         <TouchableOpacity onPress={()=>markCompleted(item.id)}>
-                            <Ionicons name="checkmark-done-circle-outline" size={24} color="green"/>
+                            <Ionicons name= "checkmark-done-circle-outline" size={24} color= "green"/>
                         </TouchableOpacity>
                         </View>
-
+                                                                                                                                                                                    
                         {/* Left swipe( rightopenvalue - delete) */}
                             <View style={{flex:1, alignItems: "flex-end", justifyContent: "center"}}>
                         <TouchableOpacity onPress={()=>deleteTask(item.id)}>
-                            <Ionicons name="checkmark-done-circle-outline" size={24} color="red"/>
+                            <Ionicons name="trash-outline" size={24} color="red"/>
                         </TouchableOpacity>
                         </View>
                         </View>
@@ -157,6 +157,7 @@ export default function Profile() {
                             }
                             else if(toValue == 75){
                                 markCompleted(rowKey);
+                                if(rowMap[rowKey]) rowMap[rowKey].closeRow();
                             }
                         }} 
                      />
