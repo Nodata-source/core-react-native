@@ -52,21 +52,21 @@ export default function Signup() {
             <Text style={styles.label}>Email Address</Text>
             <TextInput
               placeholder="Enter your Email"
-              value={email}
+              value={email.trim()}
               onChangeText={setEmail}
               style={styles.styleTextInput}
             />
             <Text style={styles.label}>User Name</Text>
             <TextInput
               placeholder="Enter your Username"
-              value={userName}
+              value={userName.trim()}
               onChangeText={setUserName}
               style={styles.styleTextInput}
             />
             <Text style={styles.label}>Password</Text>
             <TextInput
               placeholder="Enter your Password"
-              value={password}
+              value={password.trim()}
               onChangeText={setPassword}
               style={styles.styleTextInput}
             />

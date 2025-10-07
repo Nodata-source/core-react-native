@@ -3,11 +3,13 @@ import { getAuth } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";
 import {useRouter} from 'expo-router'
+import { useState } from "react";
 
 export default function Profile() {
   const auth = getAuth();
   const user = auth.currentUser;
   const router = useRouter();
+  const [darkModeOn, setDarkModeOn] = useState(false);
 
   const handleLogout = async () => {
     try{
@@ -24,6 +26,7 @@ export default function Profile() {
         <View style={styles.styleIcons}>
             <TouchableOpacity>
                 <Ionicons name="settings-outline" size={24} color="black" />
+
             </TouchableOpacity>
 
             <TouchableOpacity>

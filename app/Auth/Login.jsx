@@ -35,9 +35,9 @@ export default function Login() {
             <Text>Hello</Text>
             <View style={styles.signupCard}>
                 <Text style={styles.label}>Email Address</Text>
-                <TextInput placeholder="Enter your Email" value={email} onChangeText={setEmail} style={styles.styleTextInput}/>
+                <TextInput placeholder="Enter your Email" value={email.trim()} onChangeText={setEmail} style={styles.styleTextInput}/>
                 <Text style={styles.label}>Password</Text>
-                <TextInput placeholder="Enter your Password" value={password} onChangeText={setPassword} style={styles.styleTextInput}/>
+                <TextInput placeholder="Enter your Password" value={password.trim()} onChangeText={setPassword} style={styles.styleTextInput}/>
             </View>
             <TouchableOpacity style={styles.signupButton} onPress={handleLogin}>
                 <Text style={{color: "white", fontWeight: "bold", fontSize: 15}}>Login</Text>
