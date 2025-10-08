@@ -25,7 +25,7 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.anonymous.corereactnative",
-      "googleServicesFile": "./android/app/google-services.json"
+      "googleServicesFile": "./google-services.json"
     },
 
     "web": {
@@ -47,6 +47,9 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+     "extra": {
+      "projectId": "b338318e-e9c4-48d6-9c84-2613d1cfcf2a"
     }
   }
 }

@@ -1,13 +1,13 @@
-import { View, Text } from "react-native";
-import { useState, useEffect } from "react";
-import * as Notifications from 'expo-notifications'
-// import * as permissions from 'expo-permissions';
-export default function NotificationsPage() {
+import Constants from "expo-constants";
+import * as Notifications from 'expo-notifications';
+import React, { useEffect, useState } from "react";
+import { Text, View } from "react-native";
 
+export default function NotificationsPage() {
   const [expoPushToken, setExpoPushToken] = useState('');
 
-  useEffect(()=> {
-    async function registerForPushNotifications(){
+  useEffect(() => {
+    async function registerForPushNotifications() {
       const { status } = await Notifications.getPermissionsAsync();
       let finalStatus = status;
 
@@ -21,11 +21,14 @@ export default function NotificationsPage() {
         return;
       }
 
-      const tokenData = await Notifications.getExpoPushTokenAsync();
+      // Pass projectId explicitly here
+      const tokenData = await Notifications.getExpoPushTokenAsync({
+        projectId: Constants.expoConfig.extra.projectId,
+      });
       setExpoPushToken(tokenData.data);
 
       // Send token to backend
-      await fetch('https://your-backend.com/api/save-token', {
+      await fetch('http://192.168.1.119:3000/api/save-token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: tokenData.data }),
@@ -33,8 +36,7 @@ export default function NotificationsPage() {
     }
 
     registerForPushNotifications();
-    
-  },[]);
+  }, []);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

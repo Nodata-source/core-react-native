@@ -3,12 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from "reac
 import { useState } from "react";
 import { db } from "../../firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
+import { useRouter } from "expo-router";
 
 export default function Dashboard() {
 
     const [text, setText] = useState("");
     const [tasks, setTasks] = useState([])
     const [taskClicked, setTaskClicked] = useState(false);
+    const router = useRouter();
 
     const addTask = async () => {
         if(text.trim() === '') return;
@@ -96,6 +98,12 @@ export default function Dashboard() {
               <TouchableOpacity style={styles.newTask}>
                 <Text>Sync Now</Text>
                 <Ionicons name="sync-outline" size={20} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.quickMenus}>
+              <TouchableOpacity style={styles.newTask} onPress={() => router.push("Map/map")}>
+                <Text>Map</Text>
+                <Ionicons name="location-outline" size={20} color="black" />
               </TouchableOpacity>
             </View>
           </View>
