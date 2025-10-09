@@ -8,6 +8,7 @@ export default function MapScreen(){
 const [location, setLocation] = useState(null);
 const [selectedCoords, setSelectedCoords] = useState(null);
 const [selectedMarker, setselectedMarker] = useState(null)
+const [region, setRegion] = useState(null);
 
 useEffect(()=>{
     (async ()=> {
@@ -22,6 +23,17 @@ useEffect(()=>{
     })();
 
 },[]);
+
+useEffect(() => {
+  if (location) {
+    setRegion({
+      latitude: location.latitude,
+      longitude: location.longitude,
+      latitudeDelta: 0.05, // slightly zoomed out for initial view
+      longitudeDelta: 0.05,
+    });
+  }
+}, [location]);
 
 const locations = [
     { id: 1, latitude: 19.0760, longitude: 72.8777, title: "Aman", house: "101, Green Villa" },
@@ -39,23 +51,23 @@ return (
     <View style={styles.container}>
         <Text>Map</Text>
         <MapView style={styles.map}
-        region={
-          location
-            ? {
-                latitude: location.latitude,
-                longitude: location.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-              }
-            : undefined
-        }>
+        region={region}
+        onPress={()=> setselectedMarker(null)}
+        >
         {location && (
             <Marker coordinate={{
                 latitude: location.latitude,
                 longitude: location.longitude
             }}
-            title='You are here' 
-            onPress={() => setselectedMarker({title: 'You are here', latitude: location.latitude, longitude: location.longitude, house: 'N/A'})}
+            // title='You are here' 
+            onPress={() => {setselectedMarker({title: 'You are here', latitude: location.latitude, longitude: location.longitude, house: 'N/A'});
+            setRegion({
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+            }); 
+        }}
             >
             <Callout>
               <View style={{ width: 180 }}>
@@ -74,9 +86,17 @@ return (
                 latitude: loc.latitude,
                 longitude: loc.longitude
             }}
-            title={loc.title}
-    pinColor="blue"
-    onPress={() => setselectedMarker(loc)}
+            // title={loc.title}
+    // pinColor="blue"
+    onPress={() => {
+        setselectedMarker(loc);
+        setRegion({
+            latitude: loc.latitude,
+            longitude: loc.longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+        });
+    }}
   >
     <Callout>
       <View style={{ width: 180 }}>
@@ -120,13 +140,19 @@ const styles = StyleSheet.create({
     height: '80%',
   },
   detailsTab: {
-    width: "90%",
+   position: "absolute",
+    top: 100, // shows above the bottom edge
+    alignSelf: "center",
     backgroundColor: "#e6f0ff",
     borderRadius: 12,
     padding: 16,
-    marginTop: 12,
+    width: "85%",
     alignItems: "center",
-    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 4,
   },
   detailsTitle: {
     fontWeight: "bold",
